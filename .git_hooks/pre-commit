@@ -1,0 +1,12 @@
+#!/bin/sh
+echo "Running RuboCop..."
+bundle exec rubocop -A
+
+# Check if rubocop succeeded
+if [ $? -ne 0 ]; then
+  echo "RuboCop found issues that couldn't be auto-corrected. Commit aborted."
+  exit 1
+fi
+
+echo "RuboCop passed, continuing with commit."
+exit 0
