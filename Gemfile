@@ -29,7 +29,7 @@ group :development do
   gem "annotate"
   gem "bullet"
   gem "hotwire-livereload"
-  gem 'rails-erd', '~> 1.7', '>= 1.7.2'
+  gem "rails-erd", "~> 1.7", ">= 1.7.2"
   gem "web-console"
 end
 group :test do
@@ -37,4 +37,3 @@ group :test do
   gem "rspec-rails"
   gem "selenium-webdriver"
 end
-
