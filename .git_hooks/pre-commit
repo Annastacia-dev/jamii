@@ -8,5 +8,16 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "RuboCop passed, continuing with commit."
+echo "RuboCop passed, running RSpec tests..."
+
+# Run RSpec tests
+bundle exec rspec
+
+# Check if RSpec succeeded
+if [ $? -ne 0 ]; then
+  echo "RSpec tests failed. Commit aborted."
+  exit 1
+fi
+
+echo "RuboCop and RSpec passed, continuing with commit."
 exit 0
