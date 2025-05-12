@@ -1,0 +1,58 @@
+services:
+  # App
+  app:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+    environment:
+      - RAILS_ENV=development
+    env_file:
+      - .env
+
+  # PostgreSQL database
+  db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+  # Redis server
+  redis:
+    image: redis:latest
+    container_name: redis_server
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    sysctls:
+     - net.core.somaxconn=1024
+    volumes:
+      - redis_data:/data
+
+  sidekiq:
+    build: .
+    command: bash -c "bundle exec sidekiq"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      - RAILS_ENV=production
+    tty: true
+    stdin_open: true
+    env_file:
+      - .env
+volumes:
+  postgres_data:
+  redis_data:
